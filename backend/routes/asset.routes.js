@@ -6,7 +6,7 @@ const router = express.Router();
 router.get("/",  getAssets);
 router.get("/:id",  getAssetById);
 
-router.post("/:id", createAsset);
+router.post("/:userId", createAsset);
 router.put("/:id",  updateAsset);
 router.delete("/:id",  deleteAsset);
 

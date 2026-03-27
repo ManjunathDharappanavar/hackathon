@@ -19,12 +19,16 @@ const { AppError } = require("../utils/AppError");
 // });
 
 const createAsset = catchAsync(async (req, res, next) => {
+    const userId = req.params.userId;
+    if (!userId) {
+      return next(new AppError("User ID is required in the URL parameters", 400));
+    }
   const { name, category, value } = req.body;
 
   const asset = await Asset.create({
     name,
     category,
-    value: Number(value), //  force number
+    value: Number(value), // 👈 force number
     createdBy: req.params.userId
   });
 
