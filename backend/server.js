@@ -6,8 +6,8 @@ const app = express();
 const connectdb = require('./db/connectdb');
 const userroute = require('./routes/userroute');
 const assetRoutes = require("./routes/asset.routes");
-// const transactionRoutes = require("./routes/transaction.routes");
-// const reportRoutes = require("./routes/report.routes");
+const transactionRoutes = require("./routes/transaction.routes");
+const reportRoutes = require("./routes/report.routes");
 
 
 // Middleware
@@ -26,8 +26,8 @@ app.get('/', (req, res) => {
 
 app.use('/api',userroute);
 app.use("/api/assets", assetRoutes);
-// app.use("/api/transactions", transactionRoutes);
-// app.use("/api/reports", reportRoutes);
+app.use("/api/transactions", transactionRoutes);
+app.use("/api/reports", reportRoutes);
 
 // Start the server
 const PORT = process.env.port || 4646;
