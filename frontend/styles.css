@@ -101,6 +101,10 @@ input{
     border-radius: 5px;
 }
 
+.para{
+    text-align: center;
+    margin-left: 50px;
+}
 @media screen and (max-width: 768px) {
     .heading{
         font-size: 4em;
@@ -115,4 +119,29 @@ input{
         font-size: 16px;
     }
     
+}
+
+
+.cards{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 80px;
+    margin-top: 200px;
+    margin-right: 70px;
+}
+
+.card{
+    width: 250px;
+    height: 150px;
+    background-color: rgba(237, 232, 232, 0.5);
+    backdrop-filter: blur(30px);
+    border-radius: 20px;
+    border: rgba(0, 0, 0, 0.777) solid 2px;
+    padding: 5px;
+   
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
 }
