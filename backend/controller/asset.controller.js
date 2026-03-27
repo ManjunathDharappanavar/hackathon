@@ -9,7 +9,7 @@ const { AppError } = require("../utils/AppError");
 //   const asset = await Asset.create({
 //     name,
 //     category,
-//     value: Number(value), // 👈 force number
+//     value: Number(value), //  force number
 //     createdBy: req.params.userId
 //   });
 
@@ -28,7 +28,7 @@ const createAsset = catchAsync(async (req, res, next) => {
   const asset = await Asset.create({
     name,
     category,
-    value: Number(value), 
+    value: Number(value), // 👈 force number
     createdBy: userId
   });
 
