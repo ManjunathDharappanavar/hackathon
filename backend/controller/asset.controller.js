@@ -28,8 +28,8 @@ const createAsset = catchAsync(async (req, res, next) => {
   const asset = await Asset.create({
     name,
     category,
-    value: Number(value), // 👈 force number
-    createdBy: req.params.userId
+    value: Number(value), //  force number
+    createdBy: userId
   });
 
   res.status(201).json(asset);

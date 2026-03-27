@@ -46,11 +46,11 @@
         </div>
         
     </div>
-<script>
+    <script>
 document.getElementById("createasset").addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    // 1. Get form data
+    // 1. Get form data (Using .value directly)
     const name = document.getElementById("name").value;
     const category = document.getElementById("category").value;
     const value = document.getElementById("value").value;
@@ -61,41 +61,61 @@ document.getElementById("createasset").addEventListener("submit", async (event) 
     if (!userData) {
         alert("No user found! Redirecting to login...");
         window.location.href = "login.html";
-        return; // <--- THIS STOPPED THE "USER NOT FOUND" BUG
-    }
-
-    const user = JSON.parse(userData);
-    
-    // Check if ID specifically exists inside the object
-    if (!user.id) {
-        alert("Invalid user data. Please log in again.");
         return;
     }
 
-    const assetData = { name, category, value };
+    try {
+        const user = JSON.parse(userData);
+        
+        // DEBUG: See exactly what is inside your user object in the console
+        console.log("Current User Object:", user);
 
-    // 3. Send to Backend
-    fetch(`http://localhost:4646/api/assets/${user.id}`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(assetData)
-    })
-    .then(response => {
-        if (response.ok) return response.json();
-        throw new Error("Server rejected the asset creation.");
-    })
-    .then(data => {
-        alert("Asset created successfully!");
-        console.log("Response:", data);
-    })
-    .catch((error) => {
-        console.error("Error:", error);
-        alert("Error: " + error.message);
-    });
+        // 3. Extract the ID (Handles MongoDB _id or standard id)
+        // If your login response nests the user, it checks user.user._id as well
+        const userId = user._id || user.id || (user.user && (user.user._id || user.user.id));
+
+        if (!userId) {
+            console.error("ID NOT FOUND. Available keys:", Object.keys(user));
+            alert("User ID missing from storage. Please log in again.");
+            return;
+        }
+
+        const assetData = { 
+            name: name, 
+            category: category, 
+            value: Number(value) // Ensure value is a number for the backend
+        };
+
+        console.log(`Sending request to: http://localhost:4646/api/assets/${userId}`);
+
+        // 4. Send to Backend
+        const response = await fetch(`http://localhost:4646/api/assets/${userId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(assetData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            alert("Asset created successfully!");
+            console.log("Server Response:", result);
+            document.getElementById("createasset").reset();
+             window.location.href = "login.html"; // Clear the form
+        } else {
+            console.error("Server Error Details:", result);
+            alert("Failed to create asset: " + (result.message || "Unknown error"));
+        }
+
+    } catch (error) {
+        console.error("Script Error:", error);
+        alert("An error occurred. Check the console for details.");
+    }
 });
 </script>
+
     
 </body>
 </html>
