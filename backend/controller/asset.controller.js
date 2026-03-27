@@ -28,7 +28,7 @@ const createAsset = catchAsync(async (req, res, next) => {
   const asset = await Asset.create({
     name,
     category,
-    value: Number(value), // 👈 force number
+    value: Number(value), 
     createdBy: userId
   });
 
