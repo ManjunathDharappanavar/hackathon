@@ -9,12 +9,23 @@
 <body>
     <div class="dashcontainer">
         <h1>Dashboard</h1>
+       
         <header>
             <h2>Financial Status</h2>
         </header>
 
-       
+        <div class="createassetcontainer">
+            <div class="assetcontainer">
+                <h3>Create Asset</h3>
+                <form id="createasset">
+                    <input id="name" type="text" name="name" placeholder="Enter Asset" required><br><br>
+                    <input id="category" type="category"  placeholder="Enter category" required><br><br>
+                    <input id="value" type="value" placeholder="Enter value" required><br><br>
+                    <input type="submit" value="Create Asset"><br>
+            </div>
 
+        </div>
+         
         <div class="cards">
             <div class="card">
                 <h3>Savings</h3>
@@ -33,6 +44,58 @@
             </div>
         
         </div>
+        
     </div>
+<script>
+document.getElementById("createasset").addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    // 1. Get form data
+    const name = document.getElementById("name").value;
+    const category = document.getElementById("category").value;
+    const value = document.getElementById("value").value;
+
+    // 2. Read from LocalStorage
+    const userData = localStorage.getItem("currentUser");
+
+    if (!userData) {
+        alert("No user found! Redirecting to login...");
+        window.location.href = "login.html";
+        return; // <--- THIS STOPPED THE "USER NOT FOUND" BUG
+    }
+
+    const user = JSON.parse(userData);
+    
+    // Check if ID specifically exists inside the object
+    if (!user.id) {
+        alert("Invalid user data. Please log in again.");
+        return;
+    }
+
+    const assetData = { name, category, value };
+
+    // 3. Send to Backend
+    fetch(`http://localhost:4646/api/assets/${user.id}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(assetData)
+    })
+    .then(response => {
+        if (response.ok) return response.json();
+        throw new Error("Server rejected the asset creation.");
+    })
+    .then(data => {
+        alert("Asset created successfully!");
+        console.log("Response:", data);
+    })
+    .catch((error) => {
+        console.error("Error:", error);
+        alert("Error: " + error.message);
+    });
+});
+</script>
+    
 </body>
 </html>

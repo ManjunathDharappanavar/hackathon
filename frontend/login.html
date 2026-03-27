@@ -48,6 +48,9 @@
             .then(data => {
                 console.log("Success:", data);
                 alert("Login successful!");
+                 const userToSave = { id: data.userId, name: data.username };  // here changed
+                 localStorage.setItem("currentUser", JSON.stringify(userToSave));
+
                 window.location.href = "dashboard.html";
                 // Handle login success (e.g., redirect to dashboard)
             })
