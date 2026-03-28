@@ -6,6 +6,8 @@ const { AppError } = require("../utils/AppError");
 /**
  * CREATE TRANSACTION
  */
+// http://localhost:4646/api/transactions/userId
+// Body: { assetId, type, amount }
  const createTransaction = catchAsync(async (req, res, next) => {
   const { assetId, type, amount } = req.body;
 const userId = req.params.userId;
@@ -53,6 +55,7 @@ const userId = req.params.userId;
 /**
  * GET ALL TRANSACTIONS
  */
+// http://localhost:4646/api/transactions/userId
  const getTransactions = catchAsync(async (req, res, next) => {
   const userId = req.params.userId;
   const transactions = await Transaction.find({ createdBy: userId })
@@ -65,7 +68,7 @@ const userId = req.params.userId;
 /**
  * GET SINGLE TRANSACTION
  */
-
+// http://localhost:4646/api/transactions/:id/:userId
  const getTransactionById = catchAsync(async (req, res, next) => {
   const userId = req.params.userId;
 

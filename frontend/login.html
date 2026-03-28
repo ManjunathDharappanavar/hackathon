@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Glassfolio-Login</title>
+    <title>Glassfolio - Login</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -11,55 +11,64 @@
     <div class="container">
         <div class="login-container">
             <form id="login">
-            <h1 class="login-txt">Login Page</h1>
-            <input id="email" placeholder="Enter Email"></label><br>
-
-       <input id="password" type="password" placeholder="Enter Password"></label><br>
-        <input type="submit" value="Login">
-        <p style="display: inline;">new user?<a href="register.html">register</a></p>
-         </form>
+                <h1 class="login-txt">Login Page</h1>
+                
+                <input id="email" type="email" placeholder="Enter Email" required><br>
+                <input id="password" type="password" placeholder="Enter Password" required><br>
+                
+                <input type="submit" value="Login">
+                <p style="display: inline;">New user? <a href="register.html">Register</a></p>
+            </form>
         </div>
     </div>
 
     <script>
-
-        document.getElementById("login").addEventListener("submit", async(event) => {
-            event.preventDefault(); // Prevent the default form submission
+        // Fixed: Removed 'async' since we are using .then() chaining
+        document.getElementById("login").addEventListener("submit", (event) => {
+            event.preventDefault(); 
 
             // Get form data
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
 
-            // Create a user object
-            const userData = {
-                email: email,
-                password: password  
-            };
+            const userData = { email, password };
 
-            // Send a POST request to the backend API
+            // Send POST request
             fetch("http://localhost:4646/api/login", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(userData)
             })
-            .then(response => response.json())
+            .then(response => {
+                // CRITICAL FIX: Check if the response is actually a success (status 200-299)
+                if (!response.ok) {
+                    // If not, parse the error message from the backend and throw it to the catch block
+                    return response.json().then(errData => {
+                        throw new Error(errData.message || "Invalid credentials");
+                    });
+                }
+                return response.json();
+            })
             .then(data => {
-                console.log("Success:", data);
-                alert("Login successful!");
-                 const userToSave = { id: data.userId, name: data.username };  // here changed
-                 localStorage.setItem("currentUser", JSON.stringify(userToSave));
+                console.log("FULL RESPONSE:", data); 
 
+                // Fixed: Safely map the user data. Optional chaining (?.) prevents crashes if data is missing.
+                // NOTE: Check your browser console to see the exact structure of 'data' from your backend!
+                const safeId = data.user?._id || data.userId || "unknown_id";
+                const safeName = data.user?.username || "User";
+
+                const userToSave = { id: safeId, name: safeName };  
+                localStorage.setItem("currentUser", JSON.stringify(userToSave));
+
+                alert("Login successful!");
                 window.location.href = "dashboard.html";
-                // Handle login success (e.g., redirect to dashboard)
             })
             .catch((error) => {
                 console.error("Error:", error);
-                alert("Login failed. Please try again.");
+                // Now, if the user types the wrong password, they actually see this alert.
+                alert(error.message || "Login failed. Please try again.");
             });
         });
-
     </script>
    
 </body>

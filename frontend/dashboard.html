@@ -19,9 +19,10 @@
                 <h3>Create Asset</h3>
                 <form id="createasset">
                     <input id="name" type="text" name="name" placeholder="Enter Asset" required><br><br>
-                    <input id="category" type="category"  placeholder="Enter category" required><br><br>
-                    <input id="value" type="value" placeholder="Enter value" required><br><br>
+                    <input id="category" type="text"  placeholder="Enter category" required><br><br>
+                    <input id="value" type="number" placeholder="Enter value" required><br><br>
                     <input type="submit" value="Create Asset"><br>
+                    </form>
             </div>
 
         </div>
@@ -103,10 +104,11 @@ document.getElementById("createasset").addEventListener("submit", async (event) 
             alert("Asset created successfully!");
             console.log("Server Response:", result);
             document.getElementById("createasset").reset();
-             window.location.href = "login.html"; // Clear the form
+             // Clear the form
         } else {
             console.error("Server Error Details:", result);
             alert("Failed to create asset: " + (result.message || "Unknown error"));
+             window.location.href = "login.html";
         }
 
     } catch (error) {
