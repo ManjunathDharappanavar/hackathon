@@ -28,7 +28,7 @@ const createAsset = catchAsync(async (req, res, next) => {
   const asset = await Asset.create({
     name,
     category,
-    value: Number(value), // 👈 force number
+    value: Number(value), 
     createdBy: userId
   });
 
@@ -76,10 +76,11 @@ const updateAsset = async(req, res)=>{
 
 /* DELETE */
 const deleteAsset = catchAsync(async (req, res, next) => {
-  const asset = await Asset.findOneAndDelete({
-    _id: req.params.id,
-    createdBy: req.params.userId,
-  });
+  const id = req.params.id;
+  if (!id) {
+    return next(new AppError("Asset ID is required in the URL parameters", 400));
+  }
+  const asset = await Asset.findOneAndDelete(id);
 
   if (!asset) {
     return next(new AppError("Asset not found", 404));
