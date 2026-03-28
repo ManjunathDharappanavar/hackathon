@@ -43,10 +43,11 @@ const getAssets = catchAsync(async (req, res, next) => {
 
 /* READ ONE */
 const getAssetById = catchAsync(async (req, res, next) => {
-  const asset = await Asset.findOne({
-    _id: req.params.id,
-    createdBy: req.params.userId,
-  });
+  const id = req.params.id;
+  if (!id) {
+    return next(new AppError("Asset ID is required in the URL parameters", 400));
+  }
+  const asset = await Asset.findById(id);
   if (!asset) {
     return next(new AppError("Asset not found", 404));
   }
