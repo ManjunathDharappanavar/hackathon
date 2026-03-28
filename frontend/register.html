@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    //<meta http-equiv="Content-Security-Policy" content="connect-src 'self' http://localhost:4646;">
+
+    <title>Glassfolio-Register</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="register-container">
+            <h1>Register</h1>
+            <form id="registeruser">
+                <input id="username" type="text" name="username" id="username" placeholder="Enter Username" required><br><br>
+                <input id="email" type="email" name="email" placeholder="Enter Email" required><br><br>
+                <input id="password" type="password" placeholder="Create password" required><br><br>
+              
+
+                <input type="submit" value="Register" ><br>
+                <p class="para" style="display: inline;">Back to login<a href="login.html">Login</a></p>
+            </form>
+        </div>
+    </div>
+
+    <script>
+    
+    </script>
+    <script>
+        document.getElementById("registeruser").addEventListener("submit", async(event) => {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Get form data
+            const username = document.getElementById("username").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            // const res= await fetch("/http://localhost:4646/api/register", {
+            //     method: "POST",
+            //     headers: {
+            //         "Content-Type": "application/json"
+            //     },
+            //     body: JSON.stringify({username, email, password})
+            // });
+
+            // Create a user object
+            const userData = {
+                username: username,
+                email: email,
+                password: password
+            };
+
+            // Send a POST request to the backend API
+            fetch("http://localhost:4646/api/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(userData)
+            })
+            .then(Response =>{
+                if(Response.ok){
+                    alert("Registration successful! Please login.");
+                    window.location.href = "login.html"; // Redirect to login page
+                } else {
+                    alert("Registration failed. Please try again.");
+                }   
+            })
+                // Handle success (e.g., redirect to login page)
+            })
+           .then(data => {
+                console.log("Success:", data);
+                alert("Registration successful! Please login.");
+                window.location.href = "login.html"; // Redirect to login page
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                alert("Registration failed. Please try again.");
+        });
+    </script>
+
+</body>
+</html>

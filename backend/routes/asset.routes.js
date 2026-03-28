@@ -4,7 +4,7 @@ const { getAssets, getAssetById, createAsset, updateAsset, deleteAsset } = requi
 const router = express.Router();
 
 router.get("/",  getAssets);
-router.get("/:id",  getAssetById);
+router.get("/:id/:userId",  getAssetById);
 
 router.post("/:userId", createAsset);
 router.put("/:id",  updateAsset);
